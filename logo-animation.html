@@ -1,0 +1,250 @@
+<meta charset="utf-8" />
+<title>Nexus — Logo Animation</title>
+<style>
+  :root { --cycle: 9s; }
+  html, body {
+    margin: 0; height: 100%;
+    background: #ffffff;
+    display: flex; align-items: center; justify-content: center;
+    font-family: system-ui, sans-serif;
+  }
+  .stage {
+    width: min(80vmin, 620px);
+    aspect-ratio: 889 / 881;
+    /* perspective for the 3D spin */
+    perspective: 1600px;
+  }
+  .stage svg { width: 100%; height: 100%; overflow: visible; }
+
+  /* Each animated group spins/scales around its own geometric centre.
+     The build-in plays ONCE and holds; the dashed ring keeps spinning after. */
+  .sphere, .triangle, .rings, .vline,
+  .petal-tl, .petal-tr, .petal-bt {
+    transform-box: fill-box;
+    animation-duration: var(--cycle);
+    animation-iteration-count: 1;
+    animation-fill-mode: both;
+  }
+
+  /* 1 — centre sphere pops in */
+  .sphere {
+    transform-origin: center;
+    animation-name: sphereIn;
+    animation-timing-function: cubic-bezier(.2,.8,.25,1);
+  }
+  @keyframes sphereIn {
+    0%   { opacity: 0; transform: scale(0); }
+    4.5% { opacity: 1; transform: scale(1.08); }
+    6%   { opacity: 1; transform: scale(1); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  /* 2+3 — triangle scales in, then does a 3D rotateY spin */
+  .triangle {
+    transform-origin: center;
+    animation-name: triSpin;
+    animation-timing-function: cubic-bezier(.45,0,.25,1);
+  }
+  @keyframes triSpin {
+    0%     { opacity: 0; transform: perspective(1600px) rotateY(0deg)   scale(.15); }
+    5.6%   { opacity: 0; transform: perspective(1600px) rotateY(0deg)   scale(.15); }
+    15.6%  { opacity: 1; transform: perspective(1600px) rotateY(0deg)   scale(1); }
+    29%    { opacity: 1; transform: perspective(1600px) rotateY(180deg) scale(1); }
+    100%   { opacity: 1; transform: perspective(1600px) rotateY(180deg) scale(1); }
+  }
+
+  /* 3b — the concentric rings fade in behind the triangle */
+  .rings {
+    animation-name: ringsIn;
+    animation-timing-function: ease-out;
+  }
+  @keyframes ringsIn {
+    0%   { opacity: 0; }
+    22%  { opacity: 0; }
+    33%  { opacity: .8; }
+    100% { opacity: .8; }
+  }
+
+  /* dashed ring — fades in with the others, then rotates FOREVER */
+  .ring-dashed {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation:
+      ringsIn var(--cycle) ease-out 1 both,      /* one-shot fade-in */
+      dashSpin 22s linear infinite;               /* perpetual rotation */
+  }
+  @keyframes dashSpin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
+  /* 4 — vertical centre line draws top → bottom */
+  .vline {
+    stroke-dasharray: 706;
+    animation-name: lineDraw;
+    animation-timing-function: cubic-bezier(.5,0,.2,1);
+  }
+  @keyframes lineDraw {
+    0%   { stroke-dashoffset: 706; }
+    29%  { stroke-dashoffset: 706; }
+    40%  { stroke-dashoffset: 0; }
+    100% { stroke-dashoffset: 0; }
+  }
+
+  /* 5 — three petals pop in at the triangle corners (staggered) */
+  .petal-tl { transform-origin: 100% 50%; animation-name: petalTL; animation-timing-function: cubic-bezier(.2,.9,.25,1.2); }
+  .petal-tr { transform-origin: 0%   50%; animation-name: petalTR; animation-timing-function: cubic-bezier(.2,.9,.25,1.2); }
+  .petal-bt { transform-origin: 50%  0%;  animation-name: petalBT; animation-timing-function: cubic-bezier(.2,.9,.25,1.2); }
+  @keyframes petalTL {
+    0%   { opacity: 0; transform: scale(0); }
+    39%  { opacity: 0; transform: scale(0); }
+    45%  { opacity: 1; transform: scale(1.15); }
+    48%  { opacity: 1; transform: scale(1); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  @keyframes petalTR {
+    0%   { opacity: 0; transform: scale(0); }
+    42%  { opacity: 0; transform: scale(0); }
+    48%  { opacity: 1; transform: scale(1.15); }
+    51%  { opacity: 1; transform: scale(1); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  @keyframes petalBT {
+    0%   { opacity: 0; transform: scale(0); }
+    44%  { opacity: 0; transform: scale(0); }
+    50%  { opacity: 1; transform: scale(1.15); }
+    53%  { opacity: 1; transform: scale(1); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  .replay {
+    position: fixed; bottom: 20px; right: 20px;
+    padding: 9px 16px; border: 1px solid #e2c9c2; border-radius: 999px;
+    background: #fff; color: #A43B23; font-size: 13px; cursor: pointer;
+    box-shadow: 0 2px 10px rgba(164,59,35,.12);
+  }
+  .replay:hover { background: #fff6f3; }
+</style>
+
+<div class="stage" id="stage">
+  <svg viewBox="0 0 889 881" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- solid ring : fades in -->
+    <g class="rings">
+      <g opacity="0.8" filter="url(#filter0_dd_486_723)">
+        <circle cx="440.846" cy="374.754" r="319.803" stroke="url(#paint0_linear_486_723)" stroke-width="2" shape-rendering="crispEdges"/>
+      </g>
+    </g>
+
+    <!-- dashed ring : fades in, then rotates continuously -->
+    <g class="ring-dashed" opacity="0.8" filter="url(#filter1_dd_486_723)">
+      <circle cx="440.851" cy="379.177" r="350.777" stroke="url(#paint1_linear_486_723)" stroke-width="2" stroke-dasharray="8.85 8.85" shape-rendering="crispEdges"/>
+    </g>
+
+    <!-- inverted triangle : scales in, then 3D spin -->
+    <g class="triangle" filter="url(#filter2_dd_486_723)">
+      <path d="M443.066 766.352L89.0752 155.721L799.266 155.72L443.066 766.352Z" fill="white"/>
+      <path d="M90.8115 156.721L797.524 156.721L443.07 764.363L90.8115 156.721Z" stroke="url(#paint2_linear_486_723)" stroke-width="2"/>
+    </g>
+
+    <!-- vertical centre line : draws top to bottom -->
+    <line class="vline" x1="442.66" y1="58.4004" x2="442.66" y2="764.4" stroke="url(#paint3_linear_486_723)" stroke-width="3"/>
+
+    <!-- centre sphere : pops in first -->
+    <circle class="sphere" cx="436.428" cy="374.752" r="94.1345" fill="url(#paint4_linear_486_723)" stroke="url(#paint5_linear_486_723)" stroke-width="2"/>
+
+    <!-- three petal accents : staggered pop-in -->
+    <path class="petal-tr" d="M794.773 155.526C795.717 156.659 796.662 157.792 797.606 158.925C800.261 159.016 802.86 159.039 805.402 158.994C828.281 158.589 846.571 152.678 860.271 141.26C873.971 129.842 883.082 112.917 887.604 90.486C888.106 87.9936 888.552 85.4333 888.941 82.805C887.997 81.6719 887.052 80.5389 886.108 79.4058C883.453 79.3149 880.854 79.2919 878.312 79.3368C855.433 79.7417 837.143 85.6531 823.443 97.0711C809.743 108.489 800.632 125.414 796.11 147.845C795.608 150.337 795.162 152.898 794.773 155.526Z" fill="url(#paint6_linear_486_723)"/>
+    <path class="petal-bt" d="M440.779 761.503C442.254 761.503 443.729 761.503 445.204 761.503C446.973 763.485 448.655 765.466 450.248 767.448C464.584 785.282 471.753 803.117 471.753 820.951C471.753 838.786 464.584 856.62 450.248 874.455C448.655 876.436 446.973 878.418 445.204 880.399C443.729 880.399 442.254 880.399 440.779 880.399C439.009 878.418 437.327 876.436 435.734 874.455C421.398 856.62 414.23 838.786 414.23 820.951C414.23 803.117 421.398 785.282 435.734 767.448C437.327 765.466 439.009 763.485 440.779 761.503Z" fill="url(#paint7_linear_486_723)"/>
+    <path class="petal-tl" d="M94.1683 156.526C93.224 157.659 92.2797 158.792 91.3354 159.925C88.68 160.016 86.0813 160.039 83.5392 159.994C60.6604 159.589 42.3709 153.678 28.6706 142.26C14.9704 130.842 5.85945 113.917 1.33783 91.486C0.835411 88.9936 0.389691 86.4333 0.000586388 83.805C0.944889 82.6719 1.88918 81.5389 2.83349 80.4058C5.4889 80.3149 8.08763 80.2918 10.6297 80.3368C33.5085 80.7417 51.7981 86.6531 65.4983 98.0711C79.1985 109.489 88.3095 126.414 92.8311 148.845C93.3335 151.337 93.7793 153.898 94.1683 156.526Z" fill="url(#paint8_linear_486_723)"/>
+
+    <defs>
+      <filter id="filter0_dd_486_723" x="85.343" y="19.2512" width="711.005" height="711.005" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+        <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+        <feOffset dy="4"/>
+        <feGaussianBlur stdDeviation="10.65"/>
+        <feComposite in2="hardAlpha" operator="out"/>
+        <feColorMatrix type="matrix" values="0 0 0 0 0.443137 0 0 0 0 0.443137 0 0 0 0 0.443137 0 0 0 0.25 0"/>
+        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_486_723"/>
+        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+        <feOffset/>
+        <feGaussianBlur stdDeviation="17.35"/>
+        <feComposite in2="hardAlpha" operator="out"/>
+        <feColorMatrix type="matrix" values="0 0 0 0 0.442308 0 0 0 0 0.442308 0 0 0 0 0.442308 0 0 0 1 0"/>
+        <feBlend mode="normal" in2="effect1_dropShadow_486_723" result="effect2_dropShadow_486_723"/>
+        <feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow_486_723" result="shape"/>
+      </filter>
+      <filter id="filter1_dd_486_723" x="67.6742" y="0.000391006" width="746.355" height="756.253" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+        <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+        <feOffset dy="4"/>
+        <feGaussianBlur stdDeviation="10.65"/>
+        <feComposite in2="hardAlpha" operator="out"/>
+        <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_486_723"/>
+        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+        <feOffset dy="-6"/>
+        <feGaussianBlur stdDeviation="10.7"/>
+        <feComposite in2="hardAlpha" operator="out"/>
+        <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+        <feBlend mode="normal" in2="effect1_dropShadow_486_723" result="effect2_dropShadow_486_723"/>
+        <feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow_486_723" result="shape"/>
+      </filter>
+      <filter id="filter2_dd_486_723" x="57.0742" y="117.721" width="774.191" height="684.631" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+        <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+        <feOffset dy="4"/>
+        <feGaussianBlur stdDeviation="16"/>
+        <feComposite in2="hardAlpha" operator="out"/>
+        <feColorMatrix type="matrix" values="0 0 0 0 0.643137 0 0 0 0 0.231373 0 0 0 0 0.137255 0 0 0 0.16 0"/>
+        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_486_723"/>
+        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+        <feOffset dy="-6"/>
+        <feGaussianBlur stdDeviation="16"/>
+        <feComposite in2="hardAlpha" operator="out"/>
+        <feColorMatrix type="matrix" values="0 0 0 0 0.643137 0 0 0 0 0.231373 0 0 0 0 0.137255 0 0 0 0.15 0"/>
+        <feBlend mode="normal" in2="effect1_dropShadow_486_723" result="effect2_dropShadow_486_723"/>
+        <feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow_486_723" result="shape"/>
+      </filter>
+      <linearGradient id="paint0_linear_486_723" x1="440.846" y1="695.556" x2="441.16" y2="-212.6" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#A43B23"/><stop offset="1" stop-color="#FFC4B7"/>
+      </linearGradient>
+      <linearGradient id="paint1_linear_486_723" x1="440.851" y1="730.954" x2="441.16" y2="-199.6" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#A43B23"/><stop offset="1" stop-color="#FFC4B7"/>
+      </linearGradient>
+      <linearGradient id="paint2_linear_486_723" x1="444.17" y1="155.72" x2="444.17" y2="766.352" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#A43B23"/><stop offset="1" stop-color="#FFC4B7"/>
+      </linearGradient>
+      <linearGradient id="paint3_linear_486_723" x1="440.689" y1="984.437" x2="440.678" y2="-178.381" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#A43B23"/><stop offset="1" stop-color="#FFC4B7"/>
+      </linearGradient>
+      <linearGradient id="paint4_linear_486_723" x1="436.428" y1="469.886" x2="436.428" y2="279.617" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#A43B23"/><stop offset="1" stop-color="#FFC4B7"/>
+      </linearGradient>
+      <linearGradient id="paint5_linear_486_723" x1="436.428" y1="469.886" x2="436.428" y2="279.617" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#A43B23"/><stop offset="1" stop-color="#FFC4B7"/>
+      </linearGradient>
+      <linearGradient id="paint6_linear_486_723" x1="838.053" y1="161.029" x2="845.661" y2="77.3017" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#A43B23"/><stop offset="1" stop-color="#FFC4B7"/>
+      </linearGradient>
+      <linearGradient id="paint7_linear_486_723" x1="472.715" y1="791.227" x2="413.267" y2="850.675" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#A43B23"/><stop offset="1" stop-color="#FFC4B7"/>
+      </linearGradient>
+      <linearGradient id="paint8_linear_486_723" x1="50.8881" y1="162.029" x2="43.2808" y2="78.3017" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#A43B23"/><stop offset="1" stop-color="#FFC4B7"/>
+      </linearGradient>
+    </defs>
+  </svg>
+</div>
+
+<button class="replay" onclick="(function(){var s=document.getElementById('stage');var c=s.cloneNode(true);s.parentNode.replaceChild(c,s);c.id='stage';})()">↻ Replay</button>
+<script>
+  // Optional ?t=<seconds> freezes the animation at that moment (for review/QA).
+  (function(){
+    var m = new URLSearchParams(location.search).get('t');
+    if (m === null) return;
+    var t = parseFloat(m);
+    document.querySelectorAll('.sphere,.triangle,.rings,.ring-dashed,.vline,.petal-tl,.petal-tr,.petal-bt')
+      .forEach(function(el){ el.style.animationDelay = '-' + t + 's'; el.style.animationPlayState = 'paused'; });
+  })();
+</script>

@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Beautiful, Smart, High-Converting Forms in Seconds — Nuraform</title>
+  <meta name="description" content="Create beautiful, intelligent forms powered by AI. Built for thinkers, makers, and doers." />
+  <link rel="icon" href="/assets/favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="/_astro/_slug_.CDEP6yqJ.css" />
+  <link rel="stylesheet" href="/_astro/index.KDZ-ojfk.css" />
+  <link rel="stylesheet" href="/fonts/google-fonts.local.css" />
+  <style>
+    /* Hero: fullscreen background video replaces the gradient + interactive motifs */
+    .banner { height: 100vh; min-height: 100vh; }
+    .hero-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      pointer-events: none;
+    }
+    /* subtle neutral scrim (not a colorful gradient) to keep white text legible */
+    .hero-video__scrim {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: rgba(0, 0, 0, 0.28);
+      pointer-events: none;
+    }
+    .banner__text { z-index: 10; }
+
+    /* ---- Kumbhathon-style hero text ---- */
+    /* Layout: headline bottom-left, sub-text + CTA bottom-right */
+    .banner__text {
+      position: absolute;
+      inset: 0;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      padding: 0 6vw 9vh;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-end;      /* both columns anchored to the bottom */
+      gap: 6vw;
+    }
+    .banner__text .--left {
+      width: auto;
+      max-width: 56%;
+      gap: 0;
+    }
+    .banner__text .--right {
+      width: 32%;
+      max-width: 420px;
+      min-width: 340px;
+      align-items: flex-start;
+      min-height: 0;
+    }
+
+    .hero-headline {
+      color: #fff;
+      margin: 0;
+      line-height: 0.98;
+      letter-spacing: -3px;
+    }
+    /* "A Year-Round" — Playfair Display, italic, weight 400, 120px on desktop */
+    .hero-headline .--script {
+      display: block;
+      font-family: "Playfair Display", Georgia, serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 120px;
+      margin-bottom: 0.05em;
+    }
+    /* "Innovation Platform" — Inter, weight 500, 120px on desktop */
+    .hero-headline .--sans {
+      display: block;
+      font-family: "Inter", system-ui, sans-serif;
+      font-weight: 500;
+      font-size: 120px;
+    }
+
+    /* Right column: sub-text + CTA in Inter */
+    .hero-sub {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 28px;
+      width: 100%;
+      color: #fff;
+      font-family: "Inter", system-ui, sans-serif;
+    }
+    .hero-sub p { width: 100%; }
+    .hero-sub p {
+      font-family: "Inter", system-ui, sans-serif;
+      font-weight: 400;
+      font-size: clamp(1.7rem, 1.3vw, 2rem);
+      line-height: 1.45;
+      margin: 0;
+    }
+    .hero-sub .cta-button {
+      margin: 0;            /* override nuraform's centering (margin:0 auto) */
+    }
+    .hero-sub .cta-button__text {
+      font-family: "Inter", system-ui, sans-serif;
+      font-weight: 500;
+    }
+
+    /* On smaller screens: single stacked group — headline on top,
+       then the paragraph and CTA directly below it. */
+    @media (max-width: 1024px) {
+      .banner__text {
+        flex-direction: column;
+        justify-content: flex-end;   /* group sits toward the bottom, clear of the nav */
+        align-items: flex-start;
+        gap: 24px;
+        padding: 0 8vw 12vh;
+      }
+      .banner__text .--left,
+      .banner__text .--right {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+      }
+      .hero-sub { gap: 20px; }
+      /* same size for both lines on mobile; weights (400 / 500) and
+         letter-spacing (-3px, inherited from .hero-headline) unchanged */
+      .hero-headline .--script,
+      .hero-headline .--sans {
+        font-size: clamp(38px, 11vw, 64px);
+      }
+    }
+
+    /* ============ Section two: scroll-driven blue -> orange gradient ============ */
+    /* Tall section gives scroll distance; the inner sticky pane pins for one
+       viewport while the two gradient layers cross-fade. */
+    .scroll-gradient {
+      position: relative;
+      height: 220vh;
+    }
+    .scroll-gradient__sticky {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .scroll-gradient__layer {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      will-change: opacity;
+    }
+    /* Image 1: blue at top, white at bottom */
+    .scroll-gradient__layer.--blue {
+      background: linear-gradient(180deg, #c4ddf7 0%, #e6f1fd 20%, #ffffff 55%);
+      opacity: 1;
+    }
+    /* Image 2: white at top, orange at bottom (fades in over the blue as you scroll) */
+    .scroll-gradient__layer.--orange {
+      background: linear-gradient(180deg, #ffffff 45%, #fbe9d8 78%, #fbe2ca 100%);
+      opacity: 0;
+    }
+    .scroll-gradient__content {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      text-align: left;
+      gap: 6vw;
+      padding: 0 6vw;
+      color: #0f0f0f;
+    }
+    .sg-copy {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      max-width: 40%;
+    }
+    /* Two text variants sharing one masked box. As you scroll, text 1 slides
+       up and out the top (mask out) while text 2 slides up into the same spot
+       from below (mask in) — driven by scroll progress in hero.js. */
+    .sg-texts {
+      position: relative;
+      display: grid;              /* both variants occupy the same cell -> same spot */
+      width: 100%;
+      overflow: hidden;           /* the mask */
+    }
+    .sg-text {
+      grid-area: 1 / 1;
+      margin: 0;
+      font-size: clamp(24px, 2.7vw, 44px);
+      line-height: 1.28;
+      letter-spacing: -0.5px;
+      will-change: transform;
+      transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .sg-text.--one { transform: translateY(0); }      /* starts in view */
+    .sg-text.--two { transform: translateY(100%); }   /* starts below, hidden by the mask */
+    .sg-text .ink {
+      font-family: "Inter", system-ui, sans-serif;
+      font-weight: 400;
+      color: #111111;
+    }
+    .sg-text .script {
+      font-family: "Playfair Display", Georgia, serif;
+      font-style: italic;
+      font-weight: 400;
+      color: #A43B23;
+    }
+
+    /* ===== Animated logo (from logo-animation.html) ===== */
+    .sg-logo {
+      --cycle: 9s;
+      flex: 0 0 auto;
+      width: min(52vw, 660px);
+      aspect-ratio: 889 / 881;
+      perspective: 1600px;   /* for the 3D triangle spin */
+    }
+    .sg-logo svg { width: 100%; height: 100%; overflow: visible; display: block; }
+
+    /* Common setup for the build-in parts. Animations stay OFF until the
+       section scrolls into view (.is-visible), so it plays each time. */
+    .sg-logo .sphere,
+    .sg-logo .triangle,
+    .sg-logo .rings,
+    .sg-logo .vline,
+    .sg-logo .petal-tl,
+    .sg-logo .petal-tr,
+    .sg-logo .petal-bt {
+      transform-box: fill-box;
+      animation-duration: var(--cycle);
+      animation-iteration-count: 1;
+      animation-fill-mode: both;
+      animation-play-state: paused;
+    }
+    .sg-logo .sphere   { transform-origin: center; animation-timing-function: cubic-bezier(.2,.8,.25,1); }
+    .sg-logo .triangle { transform-origin: center; animation-timing-function: cubic-bezier(.45,0,.25,1); }
+    .sg-logo .rings    { animation-timing-function: ease-out; }
+    .sg-logo .vline    { stroke-dasharray: 706; animation-timing-function: cubic-bezier(.5,0,.2,1); }
+    .sg-logo .petal-tl { transform-origin: 100% 50%; animation-timing-function: cubic-bezier(.2,.9,.25,1.2); }
+    .sg-logo .petal-tr { transform-origin: 0%   50%; animation-timing-function: cubic-bezier(.2,.9,.25,1.2); }
+    .sg-logo .petal-bt { transform-origin: 50%  0%;  animation-timing-function: cubic-bezier(.2,.9,.25,1.2); }
+
+    /* dashed ring: fades in with the rest, then spins forever */
+    .sg-logo .ring-dashed { transform-box: fill-box; transform-origin: center; }
+
+    /* Turn the animations on once the section is in view */
+    .sg-logo.is-visible .sphere   { animation-name: sphereIn; animation-play-state: running; }
+    .sg-logo.is-visible .triangle { animation-name: triSpin;  animation-play-state: running; }
+    .sg-logo.is-visible .rings    { animation-name: ringsIn;  animation-play-state: running; }
+    .sg-logo.is-visible .vline    { animation-name: lineDraw; animation-play-state: running; }
+    .sg-logo.is-visible .petal-tl { animation-name: petalTL;  animation-play-state: running; }
+    .sg-logo.is-visible .petal-tr { animation-name: petalTR;  animation-play-state: running; }
+    .sg-logo.is-visible .petal-bt { animation-name: petalBT;  animation-play-state: running; }
+    .sg-logo.is-visible .ring-dashed {
+      animation: ringsIn var(--cycle) ease-out 1 both, dashSpin 22s linear infinite;
+    }
+
+    @keyframes sphereIn {
+      0%   { opacity: 0; transform: scale(0); }
+      4.5% { opacity: 1; transform: scale(1.08); }
+      6%   { opacity: 1; transform: scale(1); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    @keyframes triSpin {
+      0%    { opacity: 0; transform: perspective(1600px) rotateY(0deg)   scale(.15); }
+      5.6%  { opacity: 0; transform: perspective(1600px) rotateY(0deg)   scale(.15); }
+      15.6% { opacity: 1; transform: perspective(1600px) rotateY(0deg)   scale(1); }
+      29%   { opacity: 1; transform: perspective(1600px) rotateY(180deg) scale(1); }
+      100%  { opacity: 1; transform: perspective(1600px) rotateY(180deg) scale(1); }
+    }
+    @keyframes ringsIn {
+      0%   { opacity: 0; }
+      22%  { opacity: 0; }
+      33%  { opacity: .8; }
+      100% { opacity: .8; }
+    }
+    @keyframes dashSpin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    @keyframes lineDraw {
+      0%   { stroke-dashoffset: 706; }
+      29%  { stroke-dashoffset: 706; }
+      40%  { stroke-dashoffset: 0; }
+      100% { stroke-dashoffset: 0; }
+    }
+    @keyframes petalTL {
+      0%   { opacity: 0; transform: scale(0); }
+      39%  { opacity: 0; transform: scale(0); }
+      45%  { opacity: 1; transform: scale(1.15); }
+      48%  { opacity: 1; transform: scale(1); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    @keyframes petalTR {
+      0%   { opacity: 0; transform: scale(0); }
+      42%  { opacity: 0; transform: scale(0); }
+      48%  { opacity: 1; transform: scale(1.15); }
+      51%  { opacity: 1; transform: scale(1); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    @keyframes petalBT {
+      0%   { opacity: 0; transform: scale(0); }
+      44%  { opacity: 0; transform: scale(0); }
+      50%  { opacity: 1; transform: scale(1.15); }
+      53%  { opacity: 1; transform: scale(1); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    @media (max-width: 1024px) {
+      .scroll-gradient__content { flex-direction: column; justify-content: center; text-align: center; gap: 5vh; }
+      .sg-copy { align-items: center; max-width: 100%; }
+      .sg-logo { width: min(78vw, 400px); }
+    }
+  </style>
+</head>
+<body>
+  <!-- ============================ NAV BAR ============================ -->
+  <div class="nav white">
+    <a class="nav__logo" href="/">
+      <span class="__mark">
+        <svg width="57" height="32" viewBox="0 0 57 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M31.3997 0.026001H22.5194L28.2525 15.9338H34.2874C35.6723 15.9338 36.6376 14.5598 36.1681 13.257L31.3997 0.026001Z" fill="currentColor"></path>
+          <path d="M24.9636 31.8415H33.8439L28.1108 15.9337H22.0759C20.691 15.9337 19.7257 17.3077 20.1952 18.6105L24.9636 31.8415Z" fill="currentColor"></path>
+          <path d="M49.2611 2.8739C53.2261 2.8739 56.4408 6.08852 56.4408 10.0536C56.4406 14.0185 53.2261 17.2323 49.2611 17.2323C49.0081 17.2323 48.7581 17.2192 48.5119 17.1937C45.6566 16.8975 41.2252 17.1944 40.0299 19.8043L34.8997 31.0058C34.5707 31.7242 33.7217 32.0398 33.0033 31.7108V31.7108C32.2849 31.3818 31.9692 30.5327 32.2983 29.8143L42.7948 6.89679C42.7967 6.89272 42.8014 6.89083 42.8056 6.8925V6.8925C42.8097 6.89413 42.8143 6.89233 42.8163 6.88839C43.9861 4.51065 46.4321 2.874 49.2611 2.8739Z" fill="currentColor"></path>
+          <path d="M7.17941 28.9933C3.21433 28.9933 -0.000279081 25.7787 -0.000279081 21.8136C-0.000128692 17.8487 3.21443 14.6349 7.17941 14.6349C7.43267 14.6349 7.68286 14.648 7.92934 14.6736C10.7841 14.9701 15.2134 14.6731 16.4086 12.0637L21.5397 0.861317C21.8687 0.142975 22.7178 -0.172651 23.4361 0.156329V0.156329C24.1546 0.485343 24.4702 1.33449 24.1412 2.0529L13.6433 24.9712C13.6417 24.9748 13.6375 24.9763 13.6339 24.9747V24.9747C13.6304 24.9731 13.6263 24.9746 13.6246 24.978C12.455 27.3562 10.0086 28.9931 7.17941 28.9933Z" fill="currentColor"></path>
+        </svg>
+      </span>
+      <span class="__name">
+        <svg width="152" height="29" viewBox="0 0 152 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10.4386 9.10711C14.3536 9.10711 17.8736 11.4418 17.8736 17.1168V26.5274C17.8736 27.6049 17.0834 28.1437 16.2932 28.1437C15.503 28.1437 14.7128 27.569 14.7128 26.5274V17.5478C14.7128 13.2377 12.1985 11.8369 9.54061 11.8369C6.1284 11.8369 4.00923 14.0638 3.9374 17.8711V26.5633C3.9374 27.569 3.1472 28.1437 2.357 28.1437C1.5668 28.1437 0.776607 27.569 0.776607 26.5633V10.9389C0.776607 9.8973 1.5668 9.35853 2.357 9.35853C3.1472 9.35853 3.9374 9.86139 3.9374 10.9389V12.9503C5.12269 10.5079 7.31369 9.10711 10.4386 9.10711ZM37.4024 9.35853C38.1926 9.35853 38.9827 9.86139 38.9827 10.9389V26.5633C38.9827 27.6049 38.1926 28.1437 37.4024 28.1437C36.6122 28.1437 35.822 27.569 35.822 26.5633V24.5878C34.6367 26.9943 32.4457 28.3592 29.3567 28.3592C25.4057 28.3592 21.8858 26.0604 21.8858 20.3854V10.9748C21.8858 9.8973 22.676 9.35853 23.4662 9.35853C24.2563 9.35853 25.0465 9.8973 25.0465 10.9748V19.9544C25.0465 24.2645 27.5967 25.6653 30.2547 25.6653C33.5232 25.6653 35.7501 23.5821 35.822 19.6311V10.9389C35.822 9.86139 36.6481 9.35853 37.4024 9.35853ZM51.8307 9.39445C52.9801 9.39445 53.4111 10.041 53.4111 10.6875C53.4111 11.2622 53.052 12.1961 51.6152 12.1601C48.5263 12.0883 46.6945 13.7405 46.6945 16.5781V26.5992C46.6945 27.6049 45.9043 28.1437 45.15 28.1437C44.3598 28.1437 43.5696 27.6049 43.5696 26.5992V10.903C43.5696 9.8973 44.3598 9.35853 45.15 9.35853C45.9043 9.35853 46.6945 9.86139 46.6945 10.903V12.4116C47.5924 10.6157 49.2446 9.39445 51.8307 9.39445ZM72.5642 9.43037C73.3544 9.43037 74.1446 9.93322 74.1446 10.9748V26.6351C74.1446 27.6408 73.3544 28.1796 72.5642 28.1796C71.774 28.1796 70.9478 27.6408 70.9478 26.6351V23.6539C69.8703 26.3837 67.2124 28.3592 63.441 28.3592C57.8018 28.3592 54.1741 24.0849 54.1741 18.6972C54.1741 13.2018 57.9096 9.10711 63.5846 9.10711C66.7814 9.10711 69.547 10.7593 70.9478 13.4891V10.9748C70.9478 9.93322 71.774 9.43037 72.5642 9.43037ZM64.1593 25.5576C68.1103 25.5576 70.9478 22.5764 70.9478 18.7331C70.9478 14.9258 68.1103 11.9446 64.1593 11.9446C60.2084 11.9446 57.3349 14.7822 57.3349 18.7331C57.3349 22.6841 60.2084 25.5576 64.1593 25.5576ZM83.169 9.5022H87.0122C87.6587 9.5022 88.2334 10.041 88.2334 10.7593C88.2334 11.4418 87.6587 11.9805 87.0122 11.9805H83.169V26.5992C83.169 27.4253 82.4506 28.1437 81.5886 28.1437C80.7265 28.1437 80.0441 27.4253 80.0441 26.5992V11.9805H78.9306C78.2482 11.9805 77.6735 11.4059 77.6735 10.7593C77.6735 10.0769 78.2482 9.5022 78.9306 9.5022H80.0441V6.55692C80.0441 2.39043 82.5943 0.881871 85.5396 0.881871C86.0783 0.881871 86.6889 0.953708 87.2636 1.06146C88.0897 1.20513 88.4848 1.81574 88.4848 2.42635C88.4848 3.10879 87.982 3.75532 87.0481 3.64756C86.7608 3.61164 86.4375 3.61164 86.1861 3.61164C84.3543 3.61164 83.0612 4.29409 83.169 6.95202V9.5022ZM98.8463 28.3592C93.2431 28.3592 89.0048 24.2286 89.0048 18.7331C89.0048 13.2377 93.2431 9.10711 98.8463 9.10711C104.485 9.10711 108.688 13.2377 108.688 18.7331C108.688 24.2286 104.485 28.3592 98.8463 28.3592ZM98.8463 25.5217C102.69 25.5217 105.635 22.5764 105.635 18.6972C105.635 14.8899 102.725 11.9446 98.8463 11.9446C95.0031 11.9446 92.0578 14.8899 92.0578 18.6972C92.0578 22.5764 95.039 25.5217 98.8463 25.5217ZM120.58 9.39445C121.73 9.39445 122.161 10.041 122.161 10.6875C122.161 11.2622 121.801 12.1961 120.365 12.1601C117.276 12.0883 115.444 13.7405 115.444 16.5781V26.5992C115.444 27.6049 114.654 28.1437 113.899 28.1437C113.109 28.1437 112.319 27.6049 112.319 26.5992V10.903C112.319 9.8973 113.109 9.35853 113.899 9.35853C114.654 9.35853 115.444 9.86139 115.444 10.903V12.4116C116.342 10.6157 117.994 9.39445 120.58 9.39445ZM144.989 9.10711C148.545 9.10711 151.705 11.2981 151.705 16.5781V26.5274C151.705 27.6049 150.879 28.1437 150.089 28.1437C149.335 28.1437 148.509 27.6049 148.509 26.5274V17.045C148.509 13.094 146.533 11.8369 144.414 11.8369C141.612 11.8369 139.924 13.956 139.924 17.3323V26.5274C139.924 27.569 139.134 28.1437 138.344 28.1437C137.518 28.1437 136.728 27.569 136.728 26.5274V17.045C136.728 13.094 134.752 11.8369 132.633 11.8369C129.867 11.8369 128.179 13.8842 128.107 17.3323V26.5633C128.107 27.569 127.317 28.1437 126.527 28.1437C125.737 28.1437 124.946 27.569 124.946 26.5633V10.9389C124.946 9.8973 125.737 9.35853 126.563 9.35853C127.353 9.35853 128.107 9.86139 128.107 10.8671V12.4475C129.113 10.3283 130.981 9.10711 133.531 9.10711C135.901 9.10711 138.057 10.2206 138.99 12.8785C139.996 10.472 142.115 9.10711 144.989 9.10711Z" fill="currentColor"></path>
+        </svg>
+      </span>
+    </a>
+    <div class="nav__links">
+      <a href="/pricing">Pricing</a>
+      <a href="/faq">Help</a>
+      <a href="/blogs">Blogs</a>
+      <a href="https://app.nuraform.com/demo?ref=nav">Demo</a>
+      <a class="cta-button " href="https://app.nuraform.com/auth?ref=nav-btn">
+        <span class="cta-button__arrow-left">
+          <svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M25.8718 12.7011C26.1603 12.9895 26.1603 13.4572 25.8718 13.7457L21.1711 18.4466C20.8826 18.735 20.4149 18.735 20.1264 18.4466C19.838 18.1581 19.838 17.6904 20.1264 17.4019L24.3049 13.2234L20.1263 9.04496C19.8379 8.7565 19.8379 8.28881 20.1263 8.00034C20.4148 7.71187 20.8825 7.71187 21.171 8.00033L25.8718 12.7011ZM1.32031 13.2236L1.32031 12.485L25.3495 12.4847L25.3495 13.2234L25.3495 13.9621L1.32032 13.9623L1.32031 13.2236Z" fill="currentColor"></path>
+          </svg>
+        </span>
+        <span class="cta-button__text"> Create forms for free </span>
+        <span class="cta-button__arrow-right">
+          <svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M25.8718 12.7011C26.1603 12.9895 26.1603 13.4572 25.8718 13.7457L21.1711 18.4466C20.8826 18.735 20.4149 18.735 20.1264 18.4466C19.838 18.1581 19.838 17.6904 20.1264 17.4019L24.3049 13.2234L20.1263 9.04496C19.8379 8.7565 19.8379 8.28881 20.1263 8.00034C20.4148 7.71187 20.8825 7.71187 21.171 8.00033L25.8718 12.7011ZM1.32031 13.2236L1.32031 12.485L25.3495 12.4847L25.3495 13.2234L25.3495 13.9621L1.32032 13.9623L1.32031 13.2236Z" fill="currentColor"></path>
+          </svg>
+        </span>
+      </a>
+    </div>
+    <div class="nav__menu-btn">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+
+  <!-- ============================ MOBILE MENU PANEL ============================ -->
+  <div class="nav__menu">
+    <div class="bg"></div>
+    <div class="content">
+      <ul class="links scroll-link">
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/faq">Help</a></li>
+        <li><a href="/blogs">Blogs</a></li>
+        <li><a href="mailto:support@nuraform.com">Contact</a></li>
+        <li><a href="/terms">Terms of Use</a></li>
+        <li><a href="/privacy">Privacy Policy</a></li>
+      </ul>
+      <div class="--cta">
+        <a class="cta-button " href="https://app.nuraform.com/auth?ref=sign-in">
+          <span class="cta-button__arrow-left">
+            <svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M25.8718 12.7011C26.1603 12.9895 26.1603 13.4572 25.8718 13.7457L21.1711 18.4466C20.8826 18.735 20.4149 18.735 20.1264 18.4466C19.838 18.1581 19.838 17.6904 20.1264 17.4019L24.3049 13.2234L20.1263 9.04496C19.8379 8.7565 19.8379 8.28881 20.1263 8.00034C20.4148 7.71187 20.8825 7.71187 21.171 8.00033L25.8718 12.7011ZM1.32031 13.2236L1.32031 12.485L25.3495 12.4847L25.3495 13.2234L25.3495 13.9621L1.32032 13.9623L1.32031 13.2236Z" fill="currentColor"></path>
+            </svg>
+          </span>
+          <span class="cta-button__text"> Log In </span>
+          <span class="cta-button__arrow-right">
+            <svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M25.8718 12.7011C26.1603 12.9895 26.1603 13.4572 25.8718 13.7457L21.1711 18.4466C20.8826 18.735 20.4149 18.735 20.1264 18.4466C19.838 18.1581 19.838 17.6904 20.1264 17.4019L24.3049 13.2234L20.1263 9.04496C19.8379 8.7565 19.8379 8.28881 20.1263 8.00034C20.4148 7.71187 20.8825 7.71187 21.171 8.00033L25.8718 12.7011ZM1.32031 13.2236L1.32031 12.485L25.3495 12.4847L25.3495 13.2234L25.3495 13.9621L1.32032 13.9623L1.32031 13.2236Z" fill="currentColor"></path>
+            </svg>
+          </span>
+        </a>
+        <a class="cta-button " href="https://app.nuraform.com/auth?ref=nav-btn">
+          <span class="cta-button__arrow-left">
+            <svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M25.8718 12.7011C26.1603 12.9895 26.1603 13.4572 25.8718 13.7457L21.1711 18.4466C20.8826 18.735 20.4149 18.735 20.1264 18.4466C19.838 18.1581 19.838 17.6904 20.1264 17.4019L24.3049 13.2234L20.1263 9.04496C19.8379 8.7565 19.8379 8.28881 20.1263 8.00034C20.4148 7.71187 20.8825 7.71187 21.171 8.00033L25.8718 12.7011ZM1.32031 13.2236L1.32031 12.485L25.3495 12.4847L25.3495 13.2234L25.3495 13.9621L1.32032 13.9623L1.32031 13.2236Z" fill="currentColor"></path>
+            </svg>
+          </span>
+          <span class="cta-button__text"> Sign Up </span>
+          <span class="cta-button__arrow-right">
+            <svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M25.8718 12.7011C26.1603 12.9895 26.1603 13.4572 25.8718 13.7457L21.1711 18.4466C20.8826 18.735 20.4149 18.735 20.1264 18.4466C19.838 18.1581 19.838 17.6904 20.1264 17.4019L24.3049 13.2234L20.1263 9.04496C19.8379 8.7565 19.8379 8.28881 20.1263 8.00034C20.4148 7.71187 20.8825 7.71187 21.171 8.00033L25.8718 12.7011ZM1.32031 13.2236L1.32031 12.485L25.3495 12.4847L25.3495 13.2234L25.3495 13.9621L1.32032 13.9623L1.32031 13.2236Z" fill="currentColor"></path>
+            </svg>
+          </span>
+        </a>
+      </div>
+      <ul class="socials">
+        <li><a href="https://www.instagram.com/nuraform/"><img src="/assets/insta.svg" alt="" /></a></li>
+        <li><a href="https://x.com/nuraform"><img src="/assets/x.svg" alt="" /></a></li>
+        <li><a href="https://www.linkedin.com/company/nuraform/"><img src="/assets/linkedin.svg" alt="" /></a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ============================ HERO / BANNER ============================ -->
+  <main>
+    <section class="banner">
+      <video class="hero-video" autoplay muted loop playsinline poster="">
+        <source src="/assets/hero-video.mp4" type="video/mp4" />
+      </video>
+      <div class="hero-video__scrim"></div>
+      <div class="banner__text">
+        <div class="--left">
+          <h1 class="hero-headline">
+            <span class="--script">A Year-Round</span>
+            <span class="--sans">Innovation<br />Platform</span>
+          </h1>
+        </div>
+        <div class="--right">
+          <div class="hero-sub">
+            <p>Kumbhathon brings together Startups, Students, Mentors, Governments, and Industry Partners to build, pilot, and scale solutions for real urban and societal challenges continuously, not as a one-time event.</p>
+            <a class="cta-button white" href="#explore">
+              <span class="cta-button__arrow-left">
+                <svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M25.8718 12.7011C26.1603 12.9895 26.1603 13.4572 25.8718 13.7457L21.1711 18.4466C20.8826 18.735 20.4149 18.735 20.1264 18.4466C19.838 18.1581 19.838 17.6904 20.1264 17.4019L24.3049 13.2234L20.1263 9.04496C19.8379 8.7565 19.8379 8.28881 20.1263 8.00034C20.4148 7.71187 20.8825 7.71187 21.171 8.00033L25.8718 12.7011ZM1.32031 13.2236L1.32031 12.485L25.3495 12.4847L25.3495 13.2234L25.3495 13.9621L1.32032 13.9623L1.32031 13.2236Z" fill="currentColor"></path>
+                </svg>
+              </span>
+              <span class="cta-button__text"> Explore Opportunities </span>
+              <span class="cta-button__arrow-right">
+                <svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M25.8718 12.7011C26.1603 12.9895 26.1603 13.4572 25.8718 13.7457L21.1711 18.4466C20.8826 18.735 20.4149 18.735 20.1264 18.4466C19.838 18.1581 19.838 17.6904 20.1264 17.4019L24.3049 13.2234L20.1263 9.04496C19.8379 8.7565 19.8379 8.28881 20.1263 8.00034C20.4148 7.71187 20.8825 7.71187 21.171 8.00033L25.8718 12.7011ZM1.32031 13.2236L1.32031 12.485L25.3495 12.4847L25.3495 13.2234L25.3495 13.9621L1.32032 13.9623L1.32031 13.2236Z" fill="currentColor"></path>
+                </svg>
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ SECTION TWO: scroll-driven gradient ============================ -->
+    <!-- Background starts as the BLUE gradient (blue top / white bottom) and, as the
+         user scrolls through the section, cross-fades to the ORANGE gradient
+         (white top / orange bottom). Replace the placeholder content freely. -->
+    <section class="scroll-gradient" id="section-two">
+      <div class="scroll-gradient__sticky">
+        <div class="scroll-gradient__layer --blue"></div>
+        <div class="scroll-gradient__layer --orange"></div>
+        <div class="scroll-gradient__content">
+          <!-- Animated logo (from logo-animation.html) -->
+          <div class="sg-logo" id="sg-logo">
+            <svg viewBox="0 0 889 881" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- solid ring : fades in -->
+              <g class="rings">
+                <g opacity="0.8" filter="url(#filter0_dd_486_723)">
+                  <circle cx="440.846" cy="374.754" r="319.803" stroke="url(#paint0_linear_486_723)" stroke-width="2" shape-rendering="crispEdges"/>
+                </g>
+              </g>
+              <!-- dashed ring : fades in, then rotates continuously -->
+              <g class="ring-dashed" opacity="0.8" filter="url(#filter1_dd_486_723)">
+                <circle cx="440.851" cy="379.177" r="350.777" stroke="url(#paint1_linear_486_723)" stroke-width="2" stroke-dasharray="8.85 8.85" shape-rendering="crispEdges"/>
+              </g>
+              <!-- inverted triangle : scales in, then 3D spin -->
+              <g class="triangle" filter="url(#filter2_dd_486_723)">
+                <path d="M443.066 766.352L89.0752 155.721L799.266 155.72L443.066 766.352Z" fill="white"/>
+                <path d="M90.8115 156.721L797.524 156.721L443.07 764.363L90.8115 156.721Z" stroke="url(#paint2_linear_486_723)" stroke-width="2"/>
+              </g>
+              <!-- vertical centre line : draws top to bottom -->
+              <line class="vline" x1="442.66" y1="58.4004" x2="442.66" y2="764.4" stroke="url(#paint3_linear_486_723)" stroke-width="3"/>
+              <!-- centre sphere : pops in first -->
+              <circle class="sphere" cx="436.428" cy="374.752" r="94.1345" fill="url(#paint4_linear_486_723)" stroke="url(#paint5_linear_486_723)" stroke-width="2"/>
+              <!-- three petal accents : staggered pop-in -->
+              <path class="petal-tr" d="M794.773 155.526C795.717 156.659 796.662 157.792 797.606 158.925C800.261 159.016 802.86 159.039 805.402 158.994C828.281 158.589 846.571 152.678 860.271 141.26C873.971 129.842 883.082 112.917 887.604 90.486C888.106 87.9936 888.552 85.4333 888.941 82.805C887.997 81.6719 887.052 80.5389 886.108 79.4058C883.453 79.3149 880.854 79.2919 878.312 79.3368C855.433 79.7417 837.143 85.6531 823.443 97.0711C809.743 108.489 800.632 125.414 796.11 147.845C795.608 150.337 795.162 152.898 794.773 155.526Z" fill="url(#paint6_linear_486_723)"/>
+              <path class="petal-bt" d="M440.779 761.503C442.254 761.503 443.729 761.503 445.204 761.503C446.973 763.485 448.655 765.466 450.248 767.448C464.584 785.282 471.753 803.117 471.753 820.951C471.753 838.786 464.584 856.62 450.248 874.455C448.655 876.436 446.973 878.418 445.204 880.399C443.729 880.399 442.254 880.399 440.779 880.399C439.009 878.418 437.327 876.436 435.734 874.455C421.398 856.62 414.23 838.786 414.23 820.951C414.23 803.117 421.398 785.282 435.734 767.448C437.327 765.466 439.009 763.485 440.779 761.503Z" fill="url(#paint7_linear_486_723)"/>
+              <path class="petal-tl" d="M94.1683 156.526C93.224 157.659 92.2797 158.792 91.3354 159.925C88.68 160.016 86.0813 160.039 83.5392 159.994C60.6604 159.589 42.3709 153.678 28.6706 142.26C14.9704 130.842 5.85945 113.917 1.33783 91.486C0.835411 88.9936 0.389691 86.4333 0.000586388 83.805C0.944889 82.6719 1.88918 81.5389 2.83349 80.4058C5.4889 80.3149 8.08763 80.2918 10.6297 80.3368C33.5085 80.7417 51.7981 86.6531 65.4983 98.0711C79.1985 109.489 88.3095 126.414 92.8311 148.845C93.3335 151.337 93.7793 153.898 94.1683 156.526Z" fill="url(#paint8_linear_486_723)"/>
+              <defs>
+                <filter id="filter0_dd_486_723" x="85.343" y="19.2512" width="711.005" height="711.005" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                  <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                  <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                  <feOffset dy="4"/><feGaussianBlur stdDeviation="10.65"/><feComposite in2="hardAlpha" operator="out"/>
+                  <feColorMatrix type="matrix" values="0 0 0 0 0.443137 0 0 0 0 0.443137 0 0 0 0 0.443137 0 0 0 0.25 0"/>
+                  <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_486_723"/>
+                  <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                  <feOffset/><feGaussianBlur stdDeviation="17.35"/><feComposite in2="hardAlpha" operator="out"/>
+                  <feColorMatrix type="matrix" values="0 0 0 0 0.442308 0 0 0 0 0.442308 0 0 0 0 0.442308 0 0 0 1 0"/>
+                  <feBlend mode="normal" in2="effect1_dropShadow_486_723" result="effect2_dropShadow_486_723"/>
+                  <feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow_486_723" result="shape"/>
+                </filter>
+                <filter id="filter1_dd_486_723" x="67.6742" y="0.000391006" width="746.355" height="756.253" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                  <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                  <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                  <feOffset dy="4"/><feGaussianBlur stdDeviation="10.65"/><feComposite in2="hardAlpha" operator="out"/>
+                  <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+                  <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_486_723"/>
+                  <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                  <feOffset dy="-6"/><feGaussianBlur stdDeviation="10.7"/><feComposite in2="hardAlpha" operator="out"/>
+                  <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+                  <feBlend mode="normal" in2="effect1_dropShadow_486_723" result="effect2_dropShadow_486_723"/>
+                  <feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow_486_723" result="shape"/>
+                </filter>
+                <filter id="filter2_dd_486_723" x="57.0742" y="117.721" width="774.191" height="684.631" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                  <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                  <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                  <feOffset dy="4"/><feGaussianBlur stdDeviation="16"/><feComposite in2="hardAlpha" operator="out"/>
+                  <feColorMatrix type="matrix" values="0 0 0 0 0.643137 0 0 0 0 0.231373 0 0 0 0 0.137255 0 0 0 0.16 0"/>
+                  <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_486_723"/>
+                  <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                  <feOffset dy="-6"/><feGaussianBlur stdDeviation="16"/><feComposite in2="hardAlpha" operator="out"/>
+                  <feColorMatrix type="matrix" values="0 0 0 0 0.643137 0 0 0 0 0.231373 0 0 0 0 0.137255 0 0 0 0.15 0"/>
+                  <feBlend mode="normal" in2="effect1_dropShadow_486_723" result="effect2_dropShadow_486_723"/>
+                  <feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow_486_723" result="shape"/>
+                </filter>
+                <linearGradient id="paint0_linear_486_723" x1="440.846" y1="695.556" x2="441.16" y2="-212.6" gradientUnits="userSpaceOnUse"><stop stop-color="#A43B23"/><stop offset="1" stop-color="#FFC4B7"/></linearGradient>
+                <linearGradient id="paint1_linear_486_723" x1="440.851" y1="730.954" x2="441.16" y2="-199.6" gradientUnits="userSpaceOnUse"><stop stop-color="#A43B23"/><stop offset="1" stop-color="#FFC4B7"/></linearGradient>
+                <linearGradient id="paint2_linear_486_723" x1="444.17" y1="155.72" x2="444.17" y2="766.352" gradientUnits="userSpaceOnUse"><stop stop-color="#A43B23"/><stop offset="1" stop-color="#FFC4B7"/></linearGradient>
+                <linearGradient id="paint3_linear_486_723" x1="440.689" y1="984.437" x2="440.678" y2="-178.381" gradientUnits="userSpaceOnUse"><stop stop-color="#A43B23"/><stop offset="1" stop-color="#FFC4B7"/></linearGradient>
+                <linearGradient id="paint4_linear_486_723" x1="436.428" y1="469.886" x2="436.428" y2="279.617" gradientUnits="userSpaceOnUse"><stop stop-color="#A43B23"/><stop offset="1" stop-color="#FFC4B7"/></linearGradient>
+                <linearGradient id="paint5_linear_486_723" x1="436.428" y1="469.886" x2="436.428" y2="279.617" gradientUnits="userSpaceOnUse"><stop stop-color="#A43B23"/><stop offset="1" stop-color="#FFC4B7"/></linearGradient>
+                <linearGradient id="paint6_linear_486_723" x1="838.053" y1="161.029" x2="845.661" y2="77.3017" gradientUnits="userSpaceOnUse"><stop stop-color="#A43B23"/><stop offset="1" stop-color="#FFC4B7"/></linearGradient>
+                <linearGradient id="paint7_linear_486_723" x1="472.715" y1="791.227" x2="413.267" y2="850.675" gradientUnits="userSpaceOnUse"><stop stop-color="#A43B23"/><stop offset="1" stop-color="#FFC4B7"/></linearGradient>
+                <linearGradient id="paint8_linear_486_723" x1="50.8881" y1="162.029" x2="43.2808" y2="78.3017" gradientUnits="userSpaceOnUse"><stop stop-color="#A43B23"/><stop offset="1" stop-color="#FFC4B7"/></linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <div class="sg-copy">
+            <div class="sg-texts">
+              <!-- Text 1 — shown during the BLUE phase -->
+              <p class="sg-text --one">
+                <span class="ink">Building an Ecosystem for every thinker to </span><span class="script">drive innovation &amp; transforms lives.</span>
+              </p>
+              <!-- Text 2 — fades in during the ORANGE phase -->
+              <p class="sg-text --two">
+                <span class="script">Empowering thinkers in Tier 2/3 cities </span><span class="ink">with global mentorship, technology and funding.</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/hero.js?v=4"></script>
+</body>
+</html>
